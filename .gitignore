@@ -1,3 +1,6 @@
+get-email/src/firebase/serviceAccountKey.json
+get-email/src/firebase/firebaseUrl.json
+
 # Logs
 logs
 *.log
