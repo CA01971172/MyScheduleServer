@@ -1,7 +1,13 @@
 import express, { Express, Request, Response } from 'express'
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app: Express = express()
 const port = process.env.PORT || 80
+
+// CORSミドルウェアの追加
+app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/', (req: Request, res: Response) => {
   res.send("Hello TypeScript")
@@ -9,6 +15,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // メールを送信するエンドポイントの設定
 app.post("/get-email", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:8090"); // corsの許可
     console.log(req.body)
     res.send("gotten\n"+JSON.stringify(req.body))
 /*     const { to, subject, text } = req.body;
@@ -30,6 +37,7 @@ app.post("/get-email", async (req, res) => {
     } */
 });
 
+// サーバーの起動
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
