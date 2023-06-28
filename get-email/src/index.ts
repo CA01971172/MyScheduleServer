@@ -70,9 +70,6 @@ function deleteEmail(uid: string): void{
 
 // サーバーの処理
 app.get('/', (req: Request, res: Response) => {
-  // corsの許可を設定する
-  res.header("Access-Control-Allow-Origin", frontEndAddress);
-  res.header("Access-Control-Allow-Methods", "GET");
   res.send("Hello MySchedule Server")
 })
 
