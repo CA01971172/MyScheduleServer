@@ -20,8 +20,8 @@ app.use(bodyParser.json());
 
 // SSL/TLSの設定
 const options = {
-  key: fs.readFileSync('/path/to/private/key.pem'),
-  cert: fs.readFileSync('/path/to/certificate.pem')
+  key: fs.readFileSync('/certs/privkey.pem'),
+  cert: fs.readFileSync('/certs/fullchain.pem')
 };
 
 // HTTPリダイレクト
