@@ -18,19 +18,6 @@ const port = process.env.PORT || 80
 app.use(cors());
 app.use(bodyParser.json());
 
-// SSL/TLSの設定
-const options = {
-  key: fs.readFileSync('./certs/privkey.pem'),
-  cert: fs.readFileSync('./certs/fullchain.pem')
-};
-
-// HTTPリダイレクト
-app.use((req, res, next) => {
-  if (!req.secure) {
-    return res.redirect(`https://${req.headers.host}${req.url}`);
-  }
-  next();
-});
 
 
 // firebaseの初期化
@@ -124,6 +111,6 @@ app.post("/delete-email", async (req, res) => {
 
 
 // サーバーの起動
-https.createServer(options, app).listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`)
+})

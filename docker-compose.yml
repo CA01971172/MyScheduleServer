@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - 443:80
-    volumes:
-      - ./certs:/certs
   send-email:
     build:
       context: ./send-email
