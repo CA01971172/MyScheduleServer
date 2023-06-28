@@ -1,5 +1,10 @@
-get-email/src/firebase/serviceAccountKey.json
-get-email/src/firebase/firebaseUrl.json
+get-email/src/firebase/
+get-email/dist
+get-email/node_modules
+
+send-email/src/firebase/
+send-email/dist
+send-email/node_modules
 
 # Logs
 logs
