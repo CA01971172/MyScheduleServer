@@ -1,5 +1,7 @@
 // expressモジュールのインポート
 import express, { Express, Request, Response } from 'express'
+import https from 'https';
+import fs from 'fs';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 // firebaseモジュールのインポート
@@ -15,6 +17,20 @@ const port = process.env.PORT || 80
 // CORSミドルウェアの追加
 app.use(cors());
 app.use(bodyParser.json());
+
+// SSL/TLSの設定
+const options = {
+  key: fs.readFileSync('/path/to/private/key.pem'),
+  cert: fs.readFileSync('/path/to/certificate.pem')
+};
+
+// HTTPリダイレクト
+app.use((req, res, next) => {
+  if (!req.secure) {
+    return res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
 
 
 // firebaseの初期化
@@ -108,6 +124,6 @@ app.post("/delete-email", async (req, res) => {
 
 
 // サーバーの起動
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+https.createServer(options, app).listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
