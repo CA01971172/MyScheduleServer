@@ -33,9 +33,16 @@ admin.initializeApp({
 
 const db = admin.database();
 
+// emails下の操作を監視する
+const ref = db.ref("emails");
+ref.on('value', (snapshot) => {
+  const data = snapshot.val();
+  // データの処理
+  console.log(data);
+});
+
 // ユーザーのメールアドレスを登録する関数
 function registerEmail(uid: string, email: string): void{
-  const ref = db.ref("emails");
   const usersRef = ref.child(uid);
   usersRef.set({
     email: email
@@ -50,7 +57,6 @@ function registerEmail(uid: string, email: string): void{
 
 // ユーザーのメールアドレスを削除する関数
 function deleteEmail(uid: string): void{
-  const ref = db.ref("emails");
   const usersRef = ref.child(uid);
   usersRef.remove(function(error) {
     if (error) {
