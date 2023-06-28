@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import admin from "firebase-admin";
 
 // MyScheduleのアドレス
-const frontEndAddress: string = "http://192.168.5.55:8090";
+const frontEndAddress: string = "http://192.168.1.134:8090";
 
 // expressの初期化
 const app: Express = express()

@@ -220,17 +220,27 @@ MySchedule開発チーム
 
 // アラートメールを受け取る設定にしているユーザーの、アラートメールが必要な課題に対して、アラートメールを送信する
 async function main(): Promise<void>{
-  const emailData: any = await getEmail();
-  const uidArray: string[] = await getNeedAlertUser();
-  for(const uid of uidArray){
-    const taskTitles: string[] = await getNeedAlertTask(uid);
-    const email: string = emailData[uid];
-    await sendEmail(email, taskTitles)
+  try{
+    const emailData: any = await getEmail();
+    const uidArray: string[] = await getNeedAlertUser();
+    for(const uid of uidArray){
+      const taskTitles: string[] = await getNeedAlertTask(uid);
+      const email: string = emailData[uid];
+      await sendEmail(email, taskTitles)
+    }
+  }catch(e){
+    console.error(e);
   }
 }
 
-try{
+
+
+// node-cronモジュールのインポート
+import cron  from 'node-cron';
+
+// main()関数の自動実行を行う
+cron.schedule("0 0 12 * * *", () => {
+  // 毎日12時に実行
+  console.log("running today's task.", "\n", new Date());
   main();
-}catch(e){
-  console.error(e);
-}
+});
