@@ -1,6 +1,7 @@
 // firebaseモジュールのインポート
 import admin from "firebase-admin";
 
+/* firebaseを使用可能にする */
 // firebaseの初期化
 // 1. サービスアカウント鍵を生成しserviceAccountKey.jsonでリネームしてfirebaseフォルダ直下に配置
 const serviceAccount = require("./firebase/serviceAccountKey.json");
@@ -19,6 +20,21 @@ const db = admin.database();
 const emailRef = db.ref("emails");
 const userRef = db.ref("users");
 
+
+/* sendgridを使用可能にする */
+// sendgridモジュールのインポート
+import sendgrid from "@sendgrid/mail";
+
+// sendgridの情報が入ったjsonファイルを取得する
+const sendgridData = require("./sendgrid/apiKey.json");
+const sendgridApiKey: string = sendgridData.apiKey;
+const sendgridAdminEmail: string = sendgridData.emailFrom;
+
+// APIキーの設定
+sendgrid.setApiKey(sendgridApiKey);
+
+
+
 /* 課題管理機能のデータモデル */
 export type Task = {
   title: string;
@@ -30,6 +46,10 @@ export interface Tasks{
   [id: string]: Task;
 }
 
+const appLink: string = "https://ca01971172.github.io/MySchedule/dist/";
+
+
+/* 必要な課題にアラートメールを送信する */
 // emails下のデータを読み取る
 async function getEmail(): Promise<any> {
     let result: any = {};
@@ -138,9 +158,65 @@ function compareDate(dateA: Date, dateB: Date): boolean{
 }
 
 // ユーザーに課題のアラートメールを送信する関数
-function sendEmail(email: string, taskTitles: string[]){
+async function sendEmail(email: string, taskTitles: string[]){
   console.log(email, taskTitles)
+  const subject: string = "課題提出期限が近づいています！ MyScheduleからのお知らせ";
+  let text: string = writeMailText(taskTitles);
+  const msg = {
+  to: email,
+  from: {
+      name: "MySchedule",
+      email: sendgridAdminEmail
+  },
+  subject: subject,
+  text: text
+  };
+  try {
+    await sendgrid.send(msg);
+  } catch (error) {
+    console.error(error);
+  }
 }
+
+// メールの本文を作成する
+function writeMailText(taskTitles: string[]): string{
+  let result: string = "";
+  result = `
+尊敬するユーザー様、
+
+お世話になっております、MySchedule開発チームです。
+
+このメールは、ご利用中のMyScheduleにて提出期限が迫っている課題がありますことをお知らせいたします。
+大切な課題の提出を忘れずに行ってください。
+
+以下に、提出期限が近づいている課題の詳細情報をご案内いたします:
+
+【課題名】:
+${taskTitles.join('\n')}
+
+詳細情報にアクセスするには、MyScheduleへのリンクをクリックしてください:
+${appLink}
+
+課題提出期限は、重要な成績評価に影響する場合がございますので、早急に対応を行いましょう。
+必要な措置を講じることで、成功への一歩を踏み出すことができます。
+
+もし何かご質問やお困りの点がございましたら、お気軽にご連絡ください。
+MyScheduleのサポートチームが全力でサポートさせていただきます。
+連絡先はこちら:
+${sendgridAdminEmail}
+
+今後も、より便利で効率的な学習管理をサポートできるよう、引き続き努力してまいります。
+MyScheduleをご愛用いただき、誠にありがとうございます。
+
+よろしくお願いいたします。
+
+敬具、
+
+MySchedule開発チーム
+`;
+  return result;
+}
+
 
 // アラートメールを受け取る設定にしているユーザーの、アラートメールが必要な課題に対して、アラートメールを送信する
 async function main(): Promise<void>{
@@ -153,4 +229,8 @@ async function main(): Promise<void>{
   }
 }
 
-main();
+try{
+  main();
+}catch(e){
+  console.error(e);
+}

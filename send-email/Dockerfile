@@ -10,6 +10,7 @@ RUN npm install
 
 # プログラムに必要なファイルをコピーする
 COPY ./firebase /work/dist/firebase
+COPY ./sendgrid /work/dist/sendgrid
 
 # TypeScript コードをコピーしてビルド
 COPY ./tsconfig.json /work/
