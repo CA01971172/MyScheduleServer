@@ -46,7 +46,6 @@ export interface Tasks{
   [id: string]: Task;
 }
 
-const appLink: string = "https://ca01971172.github.io/MySchedule/dist/";
 
 
 /* 必要な課題にアラートメールを送信する */
@@ -178,6 +177,7 @@ async function sendEmail(email: string, taskTitles: string[]){
   }
 }
 
+const appLink: string = "https://ca01971172.github.io/MySchedule/dist/";
 // メールの本文を作成する
 function writeMailText(taskTitles: string[]): string{
   let result: string = "";
