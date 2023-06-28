@@ -3,6 +3,7 @@ get-email/dist
 get-email/node_modules
 
 send-email/firebase/
+send-email/sendgrid/
 send-email/dist
 send-email/node_modules
 
