@@ -22,8 +22,8 @@ FROM node:18.7.0-alpine3.15 as runner
 WORKDIR /work
 
 ENV NODE_ENV production
-ENV PORT 443
-EXPOSE 443
+ENV PORT 80
+EXPOSE 80
 
 # 本番環境用のパッケージをインストール
 COPY ./package.json /work/
