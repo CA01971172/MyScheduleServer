@@ -228,7 +228,9 @@ async function main(): Promise<void>{
       const taskTitles: string[] = await getNeedAlertTask(uid);
       const email: string = emailData[uid];
       const daysBeforeDeadline: number = await getDaysBeforeDeadline(uid);
-      await sendEmail(email, taskTitles, daysBeforeDeadline)
+      if(taskTitles.length > 0){
+        await sendEmail(email, taskTitles, daysBeforeDeadline);
+      }
     }
   }catch(e){
     console.error(e);
@@ -241,6 +243,7 @@ async function main(): Promise<void>{
 import cron  from 'node-cron';
 
 // main()関数の自動実行を行う
+console.log("running container", "\n", new Date());
 cron.schedule("0 0 12 * * *", () => {
   // 毎日12時に実行
   console.log("running today's task.", "\n", new Date());

@@ -22,6 +22,10 @@ RUN npm run build
 FROM node:18.7.0-alpine3.15 as runner
 WORKDIR /work
 
+# タイムゾーンの設定
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Tokyo
+
 ENV NODE_ENV production
 ENV PORT 80
 EXPOSE 80
