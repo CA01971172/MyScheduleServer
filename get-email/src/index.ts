@@ -15,6 +15,8 @@ const port = process.env.PORT || 80
 // CORSミドルウェアの追加
 app.use(cors());
 app.use(bodyParser.json());
+// リバースプロキシ経由で Express サーバにアクセスしたときのクライアントのアドレスを取得可能にする
+app.set('trust proxy', true);
 
 
 
