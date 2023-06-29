@@ -21,8 +21,8 @@ app.use(bodyParser.json());
 
 // SSL/TLSの設定
 const options = {
-  key: fs.readFileSync(path.join(__dirname, 'certs/privkey.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'certs/fullchain.pem'))
+  key: fs.readFileSync(path.join(__dirname, './certs/privkey.pem')),
+  cert: fs.readFileSync(path.join(__dirname, './certs/fullchain.pem'))
 };
 
 // HTTPリダイレクト
