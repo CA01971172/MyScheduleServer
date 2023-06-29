@@ -72,7 +72,11 @@ function deleteEmail(uid: string): void{
 // サーバーの処理
 app.get('/', (req: Request, res: Response) => {
   res.send("Hello MySchedule Server")
-})
+});
+
+app.get('/hoge', (req: Request, res: Response) => {
+  res.send("Hello MySchedule Server - hoge")
+});
 
 // メールアドレス登録用のエンドポイントの設定
 app.post("/register-email", async (req, res) => {
