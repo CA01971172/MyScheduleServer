@@ -48,14 +48,15 @@ emailRef.on('value', (snapshot) => {
 // ユーザーのメールアドレスを登録する関数
 function registerEmail(uid: string, email: string): void{
   const userEmailRef = emailRef.child(uid);
-  const userDataRef = userRef.child(uid);
+  const authorizeRef = userRef.child(uid).child("izAuthorized");
   userEmailRef.set({
     email: email
   }, function(error) {
     if (error) {
       console.error("メールアドレスの登録に失敗しました", error);
     } else {
-      userDataRef.set({isAuthorized: true});
+      
+      authorizeRef.set(true);
       console.log("メールアドレスをデータベースに登録しました");
     }
   });
