@@ -11,6 +11,10 @@ RUN npm install
 # プログラムに必要なファイルをコピーする
 COPY ./firebase /work/dist/firebase
 
+# コンテナ内のファイルをホストにコピー
+VOLUME /certs
+COPY ./certs /dist/certs
+
 # TypeScript コードをコピーしてビルド
 COPY ./tsconfig.json /work/
 COPY ./src /work/
