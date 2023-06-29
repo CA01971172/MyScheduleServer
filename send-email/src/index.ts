@@ -244,6 +244,7 @@ import cron  from 'node-cron';
 
 // main()関数の自動実行を行う
 console.log("running container", "\n", new Date());
+console.log(`${new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`);
 cron.schedule("0 0 12 * * *", () => {
   // 毎日12時に実行
   console.log("running today's task.", "\n", new Date());
