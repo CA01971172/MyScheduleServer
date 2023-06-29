@@ -1,22 +1,11 @@
 version: '3.7'
 services:
-  https-portal:
-    image: steveltn/https-portal:1
-    ports:
-      - '80:80'
-      - '443:443'
-    links:
-      - metabase
-    restart: always
-  environment:
-    STAGE: local
-    DOMAINS: 'localhost -> http://metabase:3000'
   get-email:
     build:
       context: ./get-email
       dockerfile: Dockerfile
     ports:
-      - 443:443
+      - '443:443'
   send-email:
     build:
       context: ./send-email
