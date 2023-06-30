@@ -47,31 +47,41 @@ emailRef.on('value', (snapshot) => {
 
 // ユーザーのメールアドレスを登録する関数
 function registerEmail(uid: string, email: string): void{
-  const userEmailRef = emailRef.child(uid);
-  const authorizeRef = userRef.child(uid).child("izAuthorized");
-  userEmailRef.set({
-    email: email
-  }, function(error) {
-    if (error) {
-      console.error("メールアドレスの登録に失敗しました", error);
-    } else {
-      
-      authorizeRef.set(true);
-      console.log("メールアドレスをデータベースに登録しました");
-    }
-  });
+  if(uid && email){
+    const userEmailRef = emailRef.child(uid);
+    const authorizeRef = userRef.child(uid).child("izAuthorized");
+    userEmailRef.set({
+      email: email
+    }, function(error) {
+      if (error) {
+        console.error("メールアドレスの登録に失敗しました", error);
+      } else {
+        
+        authorizeRef.set(true);
+        console.log("メールアドレスをデータベースに登録しました");
+      }
+    });
+  }else{
+    // データが存在しない場合、処理をしない
+    console.log(`受け取ったデータが存在しません\nuid: ${uid}, email: ${email}`)
+  }
 }
 
 // ユーザーのメールアドレスを削除する関数
 function deleteEmail(uid: string): void{
-  const usersRef = emailRef.child(uid);
-  usersRef.remove(function(error) {
-    if (error) {
-      console.error("メールアドレスの削除に失敗しました", error);
-    } else {
-      console.log("メールアドレスをデータベースから削除しました");
-    }
-  });
+  if(uid){
+    const usersRef = emailRef.child(uid);
+    usersRef.remove(function(error) {
+      if (error) {
+        console.error("メールアドレスの削除に失敗しました", error);
+      } else {
+        console.log("メールアドレスをデータベースから削除しました");
+      }
+    });
+  }else{
+    // データが存在しない場合、処理をしない
+    console.log(`受け取ったデータが存在しません\nuid: ${uid}`)
+  }
 }
 
 
@@ -86,19 +96,19 @@ app.get('/hoge', (req: Request, res: Response) => {
 
 // メールアドレス登録用のエンドポイントの設定
 app.post("/register-email", async (req, res) => {
-    // corsの許可を設定する
-    res.header("Access-Control-Allow-Origin", frontEndAddress);
-    res.header("Access-Control-Allow-Methods", "POST");
-    // responseを処理する
-    console.log("/register-email\nデータを受け取りました", req.body);
-    res.send("gotten\n"+JSON.stringify(req.body));
-    try{
-      const uid: string = req.body.uid;
-      const email: string = req.body.email;
-      registerEmail(uid, email);
-    }catch(e){
-      console.log(e);
-    }
+  // corsの許可を設定する
+  res.header("Access-Control-Allow-Origin", frontEndAddress);
+  res.header("Access-Control-Allow-Methods", "POST");
+  // responseを処理する
+  console.log("/register-email\nデータを受け取りました", req.body);
+  res.send("gotten\n"+JSON.stringify(req.body));
+  try{
+    const uid: string = req.body.uid;
+    const email: string = req.body.email;
+    registerEmail(uid, email);
+  }catch(e){
+    console.log(e);
+  }
 });
 
 // メールアドレス削除用のエンドポイントの設定
