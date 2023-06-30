@@ -157,10 +157,10 @@ function compareDate(dateA: Date, dateB: Date): boolean{
 }
 
 // ユーザーに課題のアラートメールを送信する関数
-async function sendEmail(email: string, taskTitles: string[]){
+async function sendEmail(email: string, taskTitles: string[], daysBeforeDeadline: number){
   console.log(email, taskTitles)
   const subject: string = "課題提出期限が近づいています！ MyScheduleからのお知らせ";
-  let text: string = writeMailText(taskTitles);
+  let text: string = writeMailText(taskTitles, daysBeforeDeadline);
   const msg = {
   to: email,
   from: {
@@ -179,14 +179,15 @@ async function sendEmail(email: string, taskTitles: string[]){
 
 const appLink: string = "https://ca01971172.github.io/MySchedule/dist/";
 // メールの本文を作成する
-function writeMailText(taskTitles: string[]): string{
+function writeMailText(taskTitles: string[], daysBeforeDeadline: number): string{
   let result: string = "";
   result = `
 尊敬するユーザー様、
 
 お世話になっております、MySchedule開発チームです。
 
-このメールは、ご利用中のMyScheduleにて提出期限が迫っている課題がありますことをお知らせいたします。
+ご利用中のMyScheduleにて、提出期限が迫っている課題が存在することをお知らせいたします。
+${daysBeforeDeadline}日後が提出期限です。
 大切な課題の提出を忘れずに行ってください。
 
 以下に、提出期限が近づいている課題の詳細情報をご案内いたします:
@@ -245,7 +246,10 @@ async function main(): Promise<void>{
     for(const uid of uidArray){
       const taskTitles: string[] = await getNeedAlertTask(uid);
       const email: string = emailData[uid];
-      await sendEmail(email, taskTitles)
+      const daysBeforeDeadline: number = await getDaysBeforeDeadline(uid);
+      if(taskTitles.length > 0){
+        await sendEmail(email, taskTitles, daysBeforeDeadline);
+      }
     }
   }catch(e){
     console.error(e);
@@ -258,6 +262,8 @@ async function main(): Promise<void>{
 import cron  from 'node-cron';
 
 // main()関数の自動実行を行う
+console.log("running container", "\n", new Date());
+console.log(`${new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`);
 cron.schedule("0 0 12 * * *", () => {
   // 毎日12時に実行
   console.log("running today's task.", "\n", new Date());

@@ -15,6 +15,8 @@ const port = process.env.PORT || 80
 // CORSミドルウェアの追加
 app.use(cors());
 app.use(bodyParser.json());
+// リバースプロキシ経由で Express サーバにアクセスしたときのクライアントのアドレスを取得可能にする
+app.set('trust proxy', true);
 
 
 
@@ -35,8 +37,9 @@ admin.initializeApp({
 const db = admin.database();
 
 // emails下の操作を監視する
-const ref = db.ref("emails");
-ref.on('value', (snapshot) => {
+const emailRef = db.ref("emails");
+const userRef = db.ref("users");
+emailRef.on('value', (snapshot) => {
   const data = snapshot.val();
   // データの処理
   console.log(data);
@@ -44,13 +47,16 @@ ref.on('value', (snapshot) => {
 
 // ユーザーのメールアドレスを登録する関数
 function registerEmail(uid: string, email: string): void{
-  const usersRef = ref.child(uid);
-  usersRef.set({
+  const userEmailRef = emailRef.child(uid);
+  const authorizeRef = userRef.child(uid).child("izAuthorized");
+  userEmailRef.set({
     email: email
   }, function(error) {
     if (error) {
       console.error("メールアドレスの登録に失敗しました", error);
     } else {
+      
+      authorizeRef.set(true);
       console.log("メールアドレスをデータベースに登録しました");
     }
   });
@@ -58,7 +64,7 @@ function registerEmail(uid: string, email: string): void{
 
 // ユーザーのメールアドレスを削除する関数
 function deleteEmail(uid: string): void{
-  const usersRef = ref.child(uid);
+  const usersRef = emailRef.child(uid);
   usersRef.remove(function(error) {
     if (error) {
       console.error("メールアドレスの削除に失敗しました", error);
