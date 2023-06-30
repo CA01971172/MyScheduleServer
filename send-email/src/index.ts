@@ -192,7 +192,7 @@ function writeMailText(taskTitles: string[]): string{
 以下に、提出期限が近づいている課題の詳細情報をご案内いたします:
 
 【課題名】:
-${taskTitles.join('\n')}
+${joinTaskTitles(taskTitles)}
 
 詳細情報にアクセスするには、MyScheduleへのリンクをクリックしてください:
 ${appLink}
@@ -215,6 +215,25 @@ MyScheduleをご愛用いただき、誠にありがとうございます。
 MySchedule開発チーム
 `;
   return result;
+}
+
+function joinTaskTitles(taskTitles: string[]): string {
+  let output: string = "";
+
+  for (let i = 0; i < taskTitles.length; i++) {
+    const trimmedString = taskTitles[i].trim(); // 空白を取り除く
+
+    if (trimmedString === "") {
+      output += "無名の課題";
+    } else {
+      output += taskTitles[i];
+    }
+
+    if (i !== taskTitles.length - 1) {
+      output += "\n"; // 最後の要素以外は改行を追加
+    }
+  }
+  return output;
 }
 
 
