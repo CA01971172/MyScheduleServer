@@ -49,7 +49,7 @@ emailRef.on('value', (snapshot) => {
 function registerEmail(uid: string, email: string): void{
   if(uid && email){
     const userEmailRef = emailRef.child(uid);
-    const authorizeRef = userRef.child(uid).child("izAuthorized");
+    const authorizeRef = userRef.child(uid).child("isAuthorized");
     userEmailRef.set({
       email: email
     }, function(error) {
